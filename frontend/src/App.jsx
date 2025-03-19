@@ -1,4 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
+import "./index.css";
 
 // Context API for state management
 const FormContext = createContext();
@@ -22,10 +23,10 @@ export const FormProvider = ({ children }) => {
 
 export const FormBuilder = () => {
   const { fields, setFields } = useForm();
-  const fieldTypes = ["text", "number", "date", "checkbox"];
+  const fieldTypes = ["text", "number", "date", "checkbox", "email", "password"];
 
   const addField = (type) => {
-    setFields([...fields, { id: Date.now(), type, label: "", required: false }]);
+    setFields([...fields, { id: Date.now(), type, label: `New ${type}`, required: false }]);
   };
 
   const updateField = (id, key, value) => {
@@ -39,18 +40,18 @@ export const FormBuilder = () => {
   };
 
   return (
-    <div>
+    <div className="form-builder">
       <h2>Form Builder</h2>
-      <div>
+      <div className="controls">
         {fieldTypes.map((type) => (
           <button key={type} onClick={() => addField(type)}>
             Add {type}
           </button>
         ))}
       </div>
-      <div>
-        {fields.map((field, index) => (
-          <div key={field.id}>
+      <div className="fields">
+        {fields.map((field) => (
+          <div key={field.id} className="field">
             <input
               type="text"
               placeholder="Label"
@@ -98,10 +99,10 @@ export const RenderForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="generated-form">
       <h2>Generated Form</h2>
       {fields.map((field) => (
-        <div key={field.id}>
+        <div key={field.id} className="form-field">
           <label>{field.label}</label>
           {field.type !== "checkbox" ? (
             <input
@@ -114,7 +115,7 @@ export const RenderForm = () => {
               onChange={(e) => handleChange(field.id, e.target.checked)}
             />
           )}
-          {errors[field.id] && <p style={{ color: "red" }}>{errors[field.id]}</p>}
+          {errors[field.id] && <p className="error">{errors[field.id]}</p>}
         </div>
       ))}
       <button type="submit">Submit</button>
